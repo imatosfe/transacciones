@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Transacción</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Bundle with Popper (incluye JavaScript) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> <!-- Bootstrap CSS -->
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Agregar SweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://cdn.materialdesignicons.com/5.4.55/css/materialdesignicons.min.css" rel="stylesheet">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables JS -->
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    
+    <!-- Estilo personalizado para asegurar que los campos ocupen todo el ancho y los labels estén encima -->
+    <style>
+        /* Asegurar que los campos ocupen el 100% de su contenedor */
+        .form-control {
+            width: 100%;
+        }
+
+        /* Estilo de los labels */
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block; /* Asegura que el label esté encima del campo */
+        }
+
+        /* Espaciado entre filas */
+        .form-row {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Crear Nueva Transacción</h1>
+        <form method="POST">
+            {% csrf_token %}
+        
+            <!-- Fila 1: Tres columnas -->
+            <div class="form-row mb-3">
+                <div class="col-md-4">
+                    <label for="{{ form.transa_id.id_for_label }}">ID Transacción</label>
+                    {{ form.transa_id}}
+                </div>
+                <div class="col-md-4">
+                    <label for="{{ form.transa_tipo.id_for_label }}">Tipo</label>
+                    {{ form.transa_tipo}}
+                </div>
+                <div class="col-md-4">
+                    <label for="{{ form.banco_oricod.id_for_label }}">Banco Origen (Código)</label>
+                    {{ form.banco_oricod}}
+                </div>
+            </div>
+        
+            <!-- Fila 2: Tres columnas -->
+            <div class="form-row mb-3">
+                <div class="col-md-4">
+                    <label for="{{ form.banco_orinom.id_for_label }}">Banco Origen (Nombre)</label>
+                    {{ form.banco_orinom }}
+                </div>
+                <div class="col-md-4">
+                    <label for="{{ form.banco_destcod.id_for_label }}">Banco Destino (Código)</label>
+                    {{ form.banco_destcod}}
+                </div>
+                <div class="col-md-4">
+                    <label for="{{ form.banco_destnom.id_for_label }}">Banco Destino (Nombre)</label>
+                    {{ form.banco_destnom}}
+                </div>
+            </div>
+        
+            <!-- Fila 3: Tres columnas -->
+            <div class="form-row mb-3">
+                <div class="col-md-4">
+                    <label for="{{ form.transa_trn.id_for_label }}">Transacción</label>
+                    {{ form.transa_trn}}
+                </div>
+                <div class="col-md-4">
+                    <label for="{{ form.fecha_lbtr.id_for_label }}">Fecha</label>
+                    {{ form.fecha_lbtr }}
+                </div>
+                <div class="col-md-4">
+                    <label for="{{ form.transa_monto.id_for_label }}">Monto</label>
+                    {{ form.transa_monto}}
+                </div>
+            </div>
+        
+            <!-- Fila 4: Tres columnas -->
+            <div class="form-row mb-3">
+                <div class="col-md-4">
+                    <label for="{{ form.transa_moneda.id_for_label }}">Moneda</label>
+                    {{ form.transa_moneda}}
+                </div>
+                <div class="col-md-4">
+                    <label for="{{ form.cuenta_origen.id_for_label }}">Cuenta Origen</label>
+                    {{ form.cuenta_origen }}
+                </div>
+                <div class="col-md-4">
+                    <label for="{{ form.cuenta_destino.id_for_label }}">Cuenta Destino</label>
+                    {{ form.cuenta_destino }}
+                </div>
+            </div>
+        
+            <!-- Fila 5: Una columna -->
+            <div class="form-row mb-3">
+                <div class="col-md-12">
+                    <label for="{{ form.transa_comentario.id_for_label }}">Comentario</label>
+                    {{ form.transa_comentario}}
+                </div>
+            </div>
+        
+            <!-- Botón de Enviar -->
+            <button type="submit" class="btn btn-primary">Guardar Transacción</button>
+        </form>
+        
+        <!-- Volver a la lista de Transacciones -->
+        <a href="{% url 'transaction-list' %}" class="btn btn-secondary mt-3">Volver a la lista de Transacciones</a>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zyD1p1GJp6vM1D3/Po2Dhj2TOkXj2D8pGvHg2g4T" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384-7XxF4qaS3+pF+upET7y0AfwhrTOzMYch3GxkOpw/NoszPlfKlp5QlThom+JbYd4p" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-pzjw8f+ua7Kw1TIq0gF2A0p5jFP6ZIb1pPp6hF6w6a6nZ6u5v7WqgKMyR3csC+G7" crossorigin="anonymous"></script>
+</body>
+</html>
