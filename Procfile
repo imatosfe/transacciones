@@ -1,1 +1,1 @@
-web: gunicorn apptransa.wsgi:application 
+web: gunicorn APPTRANSA.wsgi:application 
