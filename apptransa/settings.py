@@ -58,9 +58,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'apptransa.urls'
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # Agrega aquí los orígenes permitidos
-]
+CORS_ALLOW_ALL_ORIGINS = True 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
