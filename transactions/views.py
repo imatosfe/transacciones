@@ -11,7 +11,8 @@ from rest_framework.views import APIView
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Transaction
 from .forms import TransactionForm
-
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 from django.conf import settings
 from .models import APICredentials
 
@@ -22,6 +23,14 @@ class TransactionListCreate(generics.ListCreateAPIView):
     queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
 
+    @swagger_auto_schema(
+        operation_description="Crea nuevas transacciones desde una API externa",
+        responses={
+            201: openapi.Response('Transacciones creadas correctamente', TransactionSerializer(many=True)),
+            400: 'Error en los datos enviados',
+            500: 'Error en el servidor'
+        }
+    )
     def post(self, request, *args, **kwargs):
         # URL y cabeceras de la API externa
         url = 'URL_DE_LA_API_EXTERNA'
@@ -84,10 +93,25 @@ class TransactionListCreate(generics.ListCreateAPIView):
 
 
 class TransactionList(APIView):
+    @swagger_auto_schema(
+        operation_description="Obtiene todas las transacciones",
+        responses={
+            200: openapi.Response('Lista de transacciones', TransactionSerializer(many=True)),
+        }
+    )
     def get(self, request):
         transactions = Transaction.objects.all()
         serializer = TransactionSerializer(transactions, many=True)
         return Response(serializer.data)
+
+    @swagger_auto_schema(
+        operation_description="Crea una nueva transacción",
+        request_body=TransactionSerializer,
+        responses={
+            201: openapi.Response('Transacción creada correctamente', TransactionSerializer),
+            400: 'Error en los datos enviados',
+        }
+    )
 
     def post(self, request):
         serializer = TransactionSerializer(data=request.data)
@@ -132,6 +156,17 @@ def transaction_detail(request, transa_id):
 
 
 class SecureTransactionList(APIView):
+    @swagger_auto_schema(
+            operation_description="Obtiene todas las transacciones con autenticación API Key y Hash",
+            request_headers={
+                'X-Api-Key': openapi.Parameter('X-Api-Key', openapi.IN_HEADER, description="Clave API", type=openapi.TYPE_STRING),
+                'X-Api-Hash': openapi.Parameter('X-Api-Hash', openapi.IN_HEADER, description="Hash para verificar la seguridad", type=openapi.TYPE_STRING),
+            },
+            responses={
+                200: openapi.Response('Lista de transacciones', TransactionSerializer(many=True)),
+                401: 'Unauthorized - Clave o Hash incorrectos',
+            }
+        )
     def post(self, request):
         key = request.headers.get('X-Api-Key')
         hash_value = request.headers.get('X-Api-Hash')
