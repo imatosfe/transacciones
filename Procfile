@@ -1,1 +1,1 @@
-web: gunicorn APPTRANSA.wsgi:application 
+web: gunicorn apptransa.wsgi:application --bind 0.0.0.0:$PORT
