@@ -35,8 +35,8 @@ class TransactionListCreate(generics.ListCreateAPIView):
         # URL y cabeceras de la API externa
         url = 'URL_DE_LA_API_EXTERNA'
         headers = {
-            'Authorization': 'Bearer TU_KEY_AQUI',
-            'Hash': 'TU_HASH_AQUI'
+            'Authorization': '35DD67C5oriTheBeutyExpert',
+            'Hash': 'OHGSNGIUKM+Y3EISRVBJUZDDXELU4RKXCIFUVNHHRY4+'
         }
 
         try:
