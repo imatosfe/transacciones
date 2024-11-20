@@ -25,8 +25,9 @@ urlpatterns = [
     path('api/transactions/list/', TransactionList.as_view(), name='transaction-list'),  # Listar transacciones
    path('api/transactions/secure/', SecureTransactionList.as_view(), name='secure-transaction-list'),  # Transacciones seguras
 
-path('no-api/transacciones/', transaction_list, name='secure-transaction-list'),  # Transacciones seguras
+path('no-api/transacciones/', transaction_list, name='secure-transaction-list2'),  # Transacciones seguras
  path('no-api/create/', views.transaction_create, name='transaction-create'),
   path('no-api/transactions/<int:transa_id>/', transaction_detail, name='transaction-detail'),  # Detalle de transacción
+  
     path('swagger/', schema_view.as_view(), name='schema-swagger-ui'), 
 ]

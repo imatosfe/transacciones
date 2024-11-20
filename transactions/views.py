@@ -124,6 +124,7 @@ class TransactionList(APIView):
 
 
 
+
 def transaction_create(request):
     if request.method == 'POST':
         form = TransactionForm(request.POST)
@@ -133,6 +134,7 @@ def transaction_create(request):
             # Redirigir a la lista de transacciones
             return redirect('transaction-list')
     else:
+        # Formulario vacío para la creación de una nueva transacción
         form = TransactionForm()
 
     return render(request, 'transactions/transaction_create.html', {'form': form})

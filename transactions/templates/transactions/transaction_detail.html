@@ -33,7 +33,6 @@ rel="stylesheet">
 
 
 <body>
-
     <div class="container d-flex justify-content-center align-items-center" style="height: 100vh;">
         <!-- Card para los detalles de la transacción -->
         <div class="card shadow-sm w-75">
@@ -43,92 +42,74 @@ rel="stylesheet">
             <div class="card-body">
                 <form method="post">
                     {% csrf_token %}
-                    
-                    <!-- Formulario con las dos columnas: Labels y Inputs -->
-                    <div class="row g-3 align-items-center mb-3">
-                        <div class="col-auto">
-                            <label for="transa_tipo" class="col-form-label">Tipo:</label>
-                        </div>
-                        <div class="col-auto">
+    
+                    <!-- Grupo de Inputs Justificados -->
+                    <div class="row mb-3">
+                        <label for="transa_tipo" class="col-md-4 col-form-label text-end">Tipo:</label>
+                        <div class="col-md-8">
                             <input type="text" class="form-control" id="transa_tipo" name="transa_tipo" value="{{ transaction.transa_tipo }}" readonly>
                         </div>
                     </div>
-
-                    <div class="row g-3 align-items-center mb-3">
-                        <div class="col-auto">
-                            <label for="banco_oricod" class="col-form-label">Banco Origen (Código):</label>
-                        </div>
-                        <div class="col-auto">
+    
+                    <div class="row mb-3">
+                        <label for="banco_oricod" class="col-md-4 col-form-label text-end">Banco Origen (Código):</label>
+                        <div class="col-md-8">
                             <input type="text" class="form-control" id="banco_oricod" name="banco_oricod" value="{{ transaction.banco_oricod }}" readonly>
                         </div>
                     </div>
-
-                    <div class="row g-3 align-items-center mb-3">
-                        <div class="col-auto">
-                            <label for="banco_orinom" class="col-form-label">Banco Origen (Nombre):</label>
-                        </div>
-                        <div class="col-auto">
+    
+                    <div class="row mb-3">
+                        <label for="banco_orinom" class="col-md-4 col-form-label text-end">Banco Origen (Nombre):</label>
+                        <div class="col-md-8">
                             <input type="text" class="form-control" id="banco_orinom" name="banco_orinom" value="{{ transaction.banco_orinom }}" readonly>
                         </div>
                     </div>
-
-                    <div class="row g-3 align-items-center mb-3">
-                        <div class="col-auto">
-                            <label for="banco_destcod" class="col-form-label">Banco Destino (Código):</label>
-                        </div>
-                        <div class="col-auto">
+    
+                    <div class="row mb-3">
+                        <label for="banco_destcod" class="col-md-4 col-form-label text-end">Banco Destino (Código):</label>
+                        <div class="col-md-8">
                             <input type="text" class="form-control" id="banco_destcod" name="banco_destcod" value="{{ transaction.banco_destcod }}" readonly>
                         </div>
                     </div>
-
-                    <div class="row g-3 align-items-center mb-3">
-                        <div class="col-auto">
-                            <label for="banco_destnom" class="col-form-label">Banco Destino (Nombre):</label>
-                        </div>
-                        <div class="col-auto">
+    
+                    <div class="row mb-3">
+                        <label for="banco_destnom" class="col-md-4 col-form-label text-end">Banco Destino (Nombre):</label>
+                        <div class="col-md-8">
                             <input type="text" class="form-control" id="banco_destnom" name="banco_destnom" value="{{ transaction.banco_destnom }}" readonly>
                         </div>
                     </div>
-
-                    <div class="row g-3 align-items-center mb-3">
-                        <div class="col-auto">
-                            <label for="transa_monto" class="col-form-label">Monto:</label>
-                        </div>
-                        <div class="col-auto">
+    
+                    <div class="row mb-3">
+                        <label for="transa_monto" class="col-md-4 col-form-label text-end">Monto:</label>
+                        <div class="col-md-8">
                             <input type="text" class="form-control" id="transa_monto" name="transa_monto" value="{{ transaction.transa_monto }}" readonly>
                         </div>
                     </div>
-
-                    <div class="row g-3 align-items-center mb-3">
-                        <div class="col-auto">
-                            <label for="transa_moneda" class="col-form-label">Moneda:</label>
-                        </div>
-                        <div class="col-auto">
+    
+                    <div class="row mb-3">
+                        <label for="transa_moneda" class="col-md-4 col-form-label text-end">Moneda:</label>
+                        <div class="col-md-8">
                             <input type="text" class="form-control" id="transa_moneda" name="transa_moneda" value="{{ transaction.transa_moneda }}" readonly>
                         </div>
                     </div>
-
-                    <div class="row g-3 align-items-center mb-3">
-                        <div class="col-auto">
-                            <label for="transa_comentario" class="col-form-label">Comentario:</label>
-                        </div>
-                        <div class="col-auto">
+    
+                    <div class="row mb-3">
+                        <label for="transa_comentario" class="col-md-4 col-form-label text-end">Comentario:</label>
+                        <div class="col-md-8">
                             <textarea class="form-control" id="transa_comentario" name="transa_comentario" rows="3" readonly>{{ transaction.transa_comentario }}</textarea>
                         </div>
                     </div>
-
-                    <div class="row g-3 align-items-center mb-3">
-                        <div class="col-auto">
-                            <label for="fecha_lbtr" class="col-form-label">Fecha:</label>
-                        </div>
-                        <div class="col-auto">
+    
+                    <div class="row mb-3">
+                        <label for="fecha_lbtr" class="col-md-4 col-form-label text-end">Fecha:</label>
+                        <div class="col-md-8">
                             <input type="text" class="form-control" id="fecha_lbtr" name="fecha_lbtr" value="{{ transaction.fecha_lbtr|date:'d/m/Y' }}" readonly>
                         </div>
                     </div>
-
+    
                     <!-- Botón para volver a la lista -->
-                    <div class="row g-3 align-items-center">
-                        <div class="col-auto">
+                    <div class="row">
+                        <div class="col-md-12 text-center">
                             <a href="{% url 'transaction-list' %}" class="btn btn-primary">
                                 Volver a la lista
                             </a>
@@ -138,6 +119,7 @@ rel="stylesheet">
             </div>
         </div>
     </div>
+    
 
     <!-- Enlace a los scripts de Bootstrap y jQuery (CDN) -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zyD1p1GJp6vM1D3/Po2Dhj2TOkXj2D8pGvHg2g4T" crossorigin="anonymous"></script>
