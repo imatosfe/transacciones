@@ -15,7 +15,7 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from django.conf import settings
 from .models import APICredentials
-
+from django.utils.crypto import constant_time_compare
 
 from .serializers import TransactionSerializer
 
@@ -91,6 +91,59 @@ class TransactionListCreate(generics.ListCreateAPIView):
         except Exception as e:
             return Response({"error": f"Ocurrió un error: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+class TransactionReceive(APIView):
+    """
+    API para recibir transacciones desde un banco y almacenarlas después de verificar autenticación y hash.
+    """
+
+    # Valores esperados (recomendado moverlos a variables de entorno)
+    EXPECTED_AUTHORIZATION = '35DD67C5oriTheBeutyExpert'
+    EXPECTED_HASH = 'OHGSNGIUKM+Y3EISRVBJUZDDXELU4RKXCIFUVNHHRY4+'
+
+    def post(self, request, *args, **kwargs):
+        # Validar autorización
+        authorization = request.headers.get('Authorization')
+        if not constant_time_compare(authorization, self.EXPECTED_AUTHORIZATION):
+            return Response({"error": "Autorización no válida."}, status=status.HTTP_403_FORBIDDEN)
+
+        # Validar hash
+        received_hash = request.headers.get('Hash')
+        if not constant_time_compare(received_hash, self.EXPECTED_HASH):
+            return Response({"error": "Hash no válido."}, status=status.HTTP_403_FORBIDDEN)
+
+        # Procesar los datos enviados por el banco
+        try:
+            transactions_data = request.data  # Datos en formato JSON enviados por el banco
+
+            # Validar y guardar las transacciones
+            new_transactions = []
+            for data in transactions_data:
+                transa_id = data.get('transa_id')
+                if not Transaction.objects.filter(transa_id=transa_id).exists():
+                    serializer = TransactionSerializer(data=data)
+                    if serializer.is_valid():
+                        serializer.save()
+                        new_transactions.append(data)
+                    else:
+                        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+            # Responder según las transacciones procesadas
+            if new_transactions:
+                return Response(
+                    {"message": f"{len(new_transactions)} transacciones almacenadas correctamente."},
+                    status=status.HTTP_201_CREATED
+                )
+            else:
+                return Response(
+                    {"message": "No hay nuevas transacciones para almacenar."},
+                    status=status.HTTP_200_OK
+                )
+
+        except Exception as e:
+            return Response(
+                {"error": f"Ocurrió un error al procesar los datos: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 class TransactionList(APIView):
     @swagger_auto_schema(

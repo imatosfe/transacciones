@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import SecureTransactionList, TransactionListCreate, TransactionList
+from .views import SecureTransactionList, TransactionListCreate, TransactionList, TransactionReceive
 from .views import SecureTransactionList
 from transactions.views import  transaction_list,  transaction_detail
 from drf_yasg.views import get_schema_view
@@ -24,6 +24,8 @@ urlpatterns = [
     path('api/transactions/', TransactionListCreate.as_view(), name='transaction-list-create'),  # Crear/Listar transacciones
     path('api/transactions/list/', TransactionList.as_view(), name='transaction-list'),  # Listar transacciones
    path('api/transactions/secure/', SecureTransactionList.as_view(), name='secure-transaction-list'),  # Transacciones seguras
+       path('api/transactions/receive/', TransactionReceive.as_view(), name='transaction-receive'),
+
 
 path('', transaction_list, name='secure-transaction-list2'),  # Transacciones seguras
  path('no-api/create/', views.transaction_create, name='transaction-create'),
