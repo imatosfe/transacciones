@@ -22,9 +22,9 @@ schema_view = get_schema_view(
 urlpatterns = [
         path('transactions/<int:transa_id>/', transaction_detail, name='transaction-detail'),
     path('api/transactions/', TransactionListCreate.as_view(), name='transaction-list-create'),  # Crear/Listar transacciones
-    path('api/transactions/list/', TransactionList.as_view(), name='transaction-list'),  # Listar transacciones
+    path('api/transactions/list/', TransactionList.as_view(), name='transaction-list'),  # Listar transacciones unicamente
    path('api/transactions/secure/', SecureTransactionList.as_view(), name='secure-transaction-list'),  # Transacciones seguras
-       path('api/transactions/receive/', TransactionReceive.as_view(), name='transaction-receive'),
+       path('api/transactions/receive/', TransactionReceive.as_view(), name='transaction-receive'),# esta es solamente para recibir las transacciones del banco y guardarla en la base de datos
 
 
 path('', transaction_list, name='secure-transaction-list2'),  # Transacciones seguras

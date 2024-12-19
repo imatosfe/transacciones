@@ -1,4 +1,5 @@
 import hashlib
+import re
 import requests
 from rest_framework import generics
 from rest_framework.response import Response
@@ -91,7 +92,109 @@ class TransactionListCreate(generics.ListCreateAPIView):
         except Exception as e:
             return Response({"error": f"Ocurrió un error: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
+
+
+
+
+def transaction_create(request):
+    if request.method == 'POST':
+        form = TransactionForm(request.POST)
+        if form.is_valid():
+            # Guardar la nueva transacción
+            form.save()
+            # Redirigir a la lista de transacciones
+            return redirect('transaction-list')
+    else:
+        # Formulario vacío para la creación de una nueva transacción
+        form = TransactionForm()
+
+    return render(request, 'transactions/transaction_create.html', {'form': form})
+
+
+def transaction_list(request):
+    transactions = Transaction.objects.all()
+    return render(request, 'transactions/transaction_list.html', {'transactions': transactions})
+
+def transaction_detail(request, transa_id):
+    transaction = get_object_or_404(Transaction, transa_id=transa_id)
+    return render(request, 'transactions/transaction_detail.html', {'transaction': transaction})
+
+
+
+
+
+
+
+
 class TransactionReceive(APIView):
+    """
+    API para recibir transacciones desde un banco y almacenarlas después de verificar autenticación y hash.
+    """
+
+    # Valores esperados (recomendado moverlos a variables de entorno)
+    EXPECTED_AUTHORIZATION = '35DD67C5oriTheBeutyExpert'
+    EXPECTED_HASH = 'OHGSNGIUKM+Y3EISRVBJUZDDXELU4RKXCIFUVNHHRY4+'
+
+    def post(self, request, *args, **kwargs):
+        # Validar autorización
+        authorization = request.headers.get('Authorization')
+        if not constant_time_compare(authorization, self.EXPECTED_AUTHORIZATION):
+            return Response({"error": "Autorización no válida."}, status=status.HTTP_403_FORBIDDEN)
+
+        # Validar hash
+        received_hash = request.headers.get('Hash')
+        if not constant_time_compare(received_hash, self.EXPECTED_HASH):
+            return Response({"error": "Hash no válido."}, status=status.HTTP_403_FORBIDDEN)
+
+        # Procesar los datos enviados por el banco
+        try:
+            transactions_data = request.data  # Datos en formato JSON enviados por el banco
+
+            # Validar y guardar las transacciones
+            new_transactions = []
+            for data in transactions_data:
+                transa_id = data.get('transa_id')
+
+                # Eliminar caracteres no numéricos del comentario
+                comentario = data.get('comentario', '')
+                numeros = re.findall(r'\d+', comentario)
+                data['comentario'] = numeros[0] if numeros else ''
+
+                # Verificar si la transacción ya existe
+                if not Transaction.objects.filter(transa_id=transa_id).exists():
+                    serializer = TransactionSerializer(data=data)
+                    if serializer.is_valid():
+                        serializer.save()
+                        new_transactions.append(data)
+                    else:
+                        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+            # Responder según las transacciones procesadas
+            if new_transactions:
+                return Response(
+                    {"message": f"{len(new_transactions)} transacciones almacenadas correctamente."},
+                    status=status.HTTP_201_CREATED
+                )
+            else:
+                return Response(
+                    {"message": "No hay nuevas transacciones para almacenar."},
+                    status=status.HTTP_200_OK
+                )
+
+        except Exception as e:
+            return Response(
+                {"error": f"Ocurrió un error al procesar los datos: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
+
+
+
+
+# la original
+class TransactionReceive2(APIView):
     """
     API para recibir transacciones desde un banco y almacenarlas después de verificar autenticación y hash.
     """
@@ -155,7 +258,16 @@ class TransactionList(APIView):
     def get(self, request):
         transactions = Transaction.objects.all()
         serializer = TransactionSerializer(transactions, many=True)
-        return Response(serializer.data)
+        
+        # Procesar el campo comentario para extraer solo números
+        processed_data = []
+        for transaction in serializer.data:
+            comentario = transaction.get('comentario', '')
+            numeros = re.findall(r'\d+', comentario)
+            transaction['comentario'] = numeros[0] if numeros else ''
+            processed_data.append(transaction)
+        
+        return Response(processed_data)
 
     @swagger_auto_schema(
         operation_description="Crea una nueva transacción",
@@ -172,39 +284,6 @@ class TransactionList(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-
-
-
-
-def transaction_create(request):
-    if request.method == 'POST':
-        form = TransactionForm(request.POST)
-        if form.is_valid():
-            # Guardar la nueva transacción
-            form.save()
-            # Redirigir a la lista de transacciones
-            return redirect('transaction-list')
-    else:
-        # Formulario vacío para la creación de una nueva transacción
-        form = TransactionForm()
-
-    return render(request, 'transactions/transaction_create.html', {'form': form})
-
-
-def transaction_list(request):
-    transactions = Transaction.objects.all()
-    return render(request, 'transactions/transaction_list.html', {'transactions': transactions})
-
-def transaction_detail(request, transa_id):
-    transaction = get_object_or_404(Transaction, transa_id=transa_id)
-    return render(request, 'transactions/transaction_detail.html', {'transaction': transaction})
-
-
-
-
-
 
 
 
