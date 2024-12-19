@@ -157,9 +157,9 @@ class TransactionReceive(APIView):
                 transa_id = data.get('transa_id')
 
                 # Eliminar caracteres no numéricos del comentario
-                comentario = data.get('comentario', '')
+                comentario = data.get('transa_comentario', '')
                 numeros = re.findall(r'\d+', comentario)
-                data['comentario'] = numeros[0] if numeros else ''
+                data['transa_comentario'] = numeros[0] if numeros else ''
 
                 # Verificar si la transacción ya existe
                 if not Transaction.objects.filter(transa_id=transa_id).exists():
@@ -262,9 +262,9 @@ class TransactionList(APIView):
         # Procesar el campo comentario para extraer solo números
         processed_data = []
         for transaction in serializer.data:
-            comentario = transaction.get('comentario', '')
+            comentario = transaction.get('transa_comentario', '')
             numeros = re.findall(r'\d+', comentario)
-            transaction['comentario'] = numeros[0] if numeros else ''
+            transaction['transa_comentario'] = numeros[0] if numeros else ''
             processed_data.append(transaction)
         
         return Response(processed_data)
