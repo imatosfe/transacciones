@@ -124,6 +124,21 @@
             <button type="submit" class="btn btn-primary">Guardar Transacción</button>
         </form>
      
+        <form method="POST">
+            {% csrf_token %}
+            
+            <!-- Renderiza todos los campos del formulario como párrafos -->
+            <div class="form-group">
+                {{ form.as_p }}
+            </div>
+        
+            <!-- Botón de Enviar -->
+            <button type="submit" class="btn btn-primary">Guardar Transacción</button>
+        
+            <!-- Volver a la lista de Transacciones -->
+            <a href="{% url 'secure-transaction-list2' %}" class="btn btn-secondary mt-3">Volver a la lista de Transacciones</a>
+        </form>
+        
         <!-- Volver a la lista de Transacciones -->
         <a href="{% url 'secure-transaction-list2' %}" class="btn btn-secondary mt-3">Volver a la lista de Transacciones</a>
     </div>
