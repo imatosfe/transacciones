@@ -2,7 +2,7 @@ python manage.py shell
 from transactions.models import Transaction
 from datetime import datetime
 transaction_data = {
-    "transa_id": 25,
+    "transa_id": 26,
     "transa_tipo": "ENT",
     "banco_oricod": "AHCGDOS3XXX",
     "banco_orinom": "BANCO FIHOGAR",
@@ -10,7 +10,7 @@ transaction_data = {
     "banco_destnom": "BANRESERVAS",
     "transa_trn": "E000073.95943",
     "fecha_lbtr": "2024-09-20",  # Se insertará como fecha
-    "transa_monto": 345.56,
+    "transa_monto": 3600,
     "transa_moneda": "DOP",
     "cuenta_origen": "DO17AHCG00000000011220001253",
     "cuenta_destino": "DO13AHCG00000000010220001234",
